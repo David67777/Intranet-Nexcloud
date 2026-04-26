@@ -34,7 +34,6 @@ Frente a soluciones comerciales como Google Workspace o Microsoft 365, **Nextclo
 
 | Tecnología / Lenguaje | Uso en el proyecto |
 |------------------------|--------------------|
-| **Proxmox VE** | Virtualización de servidores y gestión de entornos. |
 | **Nextcloud** | Plataforma principal de la intranet (archivos, calendario, usuarios). |
 | **OpenLDAP** | Autenticación centralizada de usuarios. |
 | **Rocket.Chat / Mattermost** | Chat corporativo y comunicación interna. |
@@ -83,7 +82,36 @@ Frente a soluciones comerciales como Google Workspace o Microsoft 365, **Nextclo
 | | Trello | Seguimiento del proyecto. |
 
 
+## 🛠️ Diario de Implementación y Hitos del Proyecto(ACTUALIZACIÓN)
+
+Desde el inicio del despliegue este sábado, se ha trabajado en la integración real de servicios mediante contenedores Docker, logrando los siguientes objetivos técnicos:
+
+### 1. Infraestructura Base (Docker)
+* **Contenerización:** Despliegue de un entorno orquestado mediante `docker-compose` que incluye Nextcloud, MariaDB, OpenLDAP (con phpLDAPadmin) y Rocket.Chat.
+* **Persistencia:** Configuración de volúmenes para asegurar la integridad de los datos de la intranet y la base de datos de usuarios.
+
+### 2. Configuración de OpenLDAP y phpLDAPadmin
+* **Estructura del Directorio:** Creación y configuración del dominio `dc=david,dc=local`.
+* **Organización:** Implementación de la Unidad Organizativa `ou=Usuarios` para centralizar las cuentas corporativas.
+* **Gestión:** Uso de phpLDAPadmin para la creación de usuarios y gestión de atributos (`posixAccount`).
+
+### 3. Integración Exitosa: Nextcloud + LDAP
+* **Estado:** ✅ **FUNCIONAL**.
+* **Hito:** Se ha logrado vincular Nextcloud con el servidor LDAP de forma exitosa. Los usuarios creados en el LDAP pueden iniciar sesión correctamente, logrando una autenticación centralizada para la gestión de archivos.
+
+### 4. Integración de Rocket.Chat + LDAP (En depuración)
+* **Estado:** ⚠️ **EN PRUEBAS**.
+* **Progreso:** Se ha establecido conexión con el servidor LDAP (`192.168.1.10:389`).
+* **Desafíos Técnicos:** Se han realizado ajustes manuales en los filtros de búsqueda `(uid=%username%)` y en el DN base. Actualmente se trabaja en la resolución de conflictos de sincronización para que la lista de usuarios sea plenamente visible.
+
 ---
+
+## 📊 Direccionamiento y Puertos
+| Servicio | IP Interna | Puerto | Estado de Integración |
+| :--- | :--- | :--- | :--- |
+| **OpenLDAP** | `192.168.1.10` | `389` | Servidor Maestro |
+| **Nextcloud** | `192.168.1.10` | `8080` | **Integrado con LDAP** |
+| **Rocket.Chat** | `192.168.1.10` | `3000` | En fase de sincronización |
 
 ## 👤 Autor
 **Nombre:** David  
